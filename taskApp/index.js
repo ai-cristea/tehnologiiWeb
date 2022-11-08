@@ -39,7 +39,10 @@ async function loadTable(){
     myHTMLCode.push("<tbody>")
 
     for (let item of data){
-        myHTMLCode.push("<tr> <td> " + item.title + "  </td> <td> " + item.isDone + " </td> </tr>")
+        myHTMLCode.push("<tr> <td> " + item.title + "  </td> <td> <input type='checkbox' value='" + item.title + "'")
+        if (item.isDone)    
+            myHTMLCode.push(" checked " )
+        myHTMLCode.push("> </td> </tr>")
     }
 
     myHTMLCode.push("</tbody>")
@@ -49,3 +52,25 @@ async function loadTable(){
 }
 
 loadTable();
+
+about = document.getElementById("menuAbout")
+tasks = document.getElementById("menuTasks")
+contact = document.getElementById("menuContact")
+
+about.onclick = function(){
+    document.getElementById("about").style.display = "block"
+    document.getElementById("contact").style.display = "none"
+    document.getElementById("tasks").style.display = "none"
+}
+
+tasks.onclick = function(){
+    document.getElementById("about").style.display = "none"
+    document.getElementById("contact").style.display = "none"
+    document.getElementById("tasks").style.display = "block"
+}
+
+contact.onclick = function(){
+    document.getElementById("about").style.display = "none"
+    document.getElementById("contact").style.display = "block"
+    document.getElementById("tasks").style.display = "none"
+}

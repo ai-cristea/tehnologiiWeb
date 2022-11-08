@@ -1,16 +1,41 @@
 <html>
-    <head>       
-
+    <head>    
+        <meta http-equiv="Content-Type" content="text/html;charset-UTF-8">   
+        <title>Task app</title>
+        <link rel="stylesheet" href="./style.css">
     </head>
     <body>
-        <form>
-            <input id="inputTask" type="text"/>
-            <input id="submitData" type="button" value="submit" onclick="addTask()"/>
-        </form>
+        <div class="header">
+            I'm the header
+        </div>
+        <div class="content">
+            <div class="content-sidebar">
+                <a href="#about" id="menuAbout">About</a>
+                <a href="#tasks" id="menuTasks">Tasks</a>
+                <a href="#contact" id="menuContact">Contact</a>
+            </div>
+            <div class="content-pane">
+                <div id="about">
+                    About
+                </div>
+                <div id="tasks" hidden>
+                    <form>
+                        <input id="inputTask" type="text"/>
+                        <input id="submitData" type="button" value="submit" onclick="addTask()"/>
+                    </form>
 
-        <div id="tableData">
+                    <div id="tableData">
 
-            
+                        
+                    </div>
+                </div>
+                <div id="contact" hidden>
+                    Contact
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            I'm the footer
         </div>
 
     </body>
