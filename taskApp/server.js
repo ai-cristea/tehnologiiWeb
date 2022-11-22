@@ -1,43 +1,23 @@
 let express = require('express')
 let bodyParser = require('body-parser')
 let cors = require('cors')
+const router = require('./routes/tasks')
+require("dotenv").config();
 
 let app = express()
-let router = express.Router()
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 app.use(cors())
 app.use('/api', router)
 
-const array = [
-    {
-        title: "tema1",
-        isDone: true
-    },{
-        title: "tema2",
-        isDone: false
-    },{
-        title: "tema3",
-        isDone: false
-    },{
-        title: "tema4",
-        isDone: false
-    }
-]
-
-router.route('/getTasks').get((req, res)=> {
-    res.json(array)
+app.use((err, req, res, next) => {
+    res.status(500).json({"ERROR": "General error"})
 })
 
-router.route('/addTask').post((req, res) => {
-    let task = req.body
-    array.push(task)
+app.set("port", process.env.PORT || 8080)
 
-    res.json(task)
+app.listen(app.get("port"), () => {
+    console.log(`Server is running on http://localhost:${app.get("port")}`);
 })
 
-let port = 8080
-app.listen(port)
-
-console.log("Server is running on http://localhost:" + port)
