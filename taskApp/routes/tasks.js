@@ -25,7 +25,7 @@ router.route('/getTask/:id').get(checkId, (req, res) => {
 })
 
 router.route('/getTasks').get((req, res) => {
-    throw new Error("custom error");
+    //throw new Error("custom error");
     let filteredTasks = [];
     if (req.query.isDone) {
         filteredTasks = tasks.filter(task => (task.isDone).toString().toLowerCase() == req.query.isDone)
