@@ -1,18 +1,24 @@
 let express = require('express')
 let bodyParser = require('body-parser')
 let cors = require('cors')
-const router = require('./routes/tasks')
+const routerTask = require('./routes/tasks')
+const routerStudent = require('./routes/students')
+const routerCourse = require('./routes/courses')
 require("dotenv").config();
 
 const sequelize = require('./sequelize');
 require("./models/task")
+require("./models/student")
+require("./models/course")
 
 let app = express()
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 app.use(cors())
-app.use('/api', router)
+app.use('/api', routerTask)
+app.use('/api', routerStudent)
+app.use('/api', routerCourse)
 
 app.use((err, req, res, next) => {
     res.status(500).json({"ERROR": "General error"})
