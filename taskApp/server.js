@@ -4,6 +4,9 @@ let cors = require('cors')
 const router = require('./routes/tasks')
 require("dotenv").config();
 
+const sequelize = require('./sequelize');
+require("./models/task")
+
 let app = express()
 
 app.use(bodyParser.urlencoded({extended: true}))
@@ -17,7 +20,13 @@ app.use((err, req, res, next) => {
 
 app.set("port", process.env.PORT || 8080)
 
-app.listen(app.get("port"), () => {
+app.listen(app.get("port"), async () => {
     console.log(`Server is running on http://localhost:${app.get("port")}`);
+    try{
+        await sequelize.authenticate();
+        console.log("Connection has been established successfully")
+    } catch(err){
+        console.log("Unable to connect to the database:", err)
+    }
 })
 

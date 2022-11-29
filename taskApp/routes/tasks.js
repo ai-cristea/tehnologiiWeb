@@ -1,11 +1,7 @@
 let express = require('express')
+const { Op } = require('sequelize')
 let router = express.Router()
-const Task = require("../Task")
-
-const tasks = [new Task(1, "tema1", true),
-new Task(2, "tema2", false),
-new Task(3, "tema3", false),
-new Task(4, "tema4", false)]
+const Task = require("../models/task")
 
 const checkId = (req, res, next) => {
     if (req.params.id && isNaN(req.params.id)) {
@@ -15,48 +11,75 @@ const checkId = (req, res, next) => {
     }
 }
 
-router.route('/getTask/:id').get(checkId, (req, res) => {
-    const task = tasks.find(task => task.id == req.params.id)
-    if (task) {
-        res.status(200).json(task)
-    } else {
-        res.status(400).json({error: "task not found!"})
+router.route('/getTask/:id').get(checkId, async (req, res) => {
+    try {
+        const task = await Task.findByPk(req.params.id);
+        if (task){
+            res.status(200).json(task);
+        } else {
+            res.status(404).json({ error: `Task with id ${req.params.id} not found!`})
+        }
+    } catch (error) {
+        res.status(500).json(error)
     }
 })
 
-router.route('/getTasks').get((req, res) => {
-    //throw new Error("custom error");
-    let filteredTasks = [];
-    if (req.query.isDone) {
-        filteredTasks = tasks.filter(task => (task.isDone).toString().toLowerCase() == req.query.isDone)
-    } else {
-        filteredTasks = tasks;
+router.route('/getTasks').get(async (req, res) => {
+    const {simplified} = req.query;
+    const {pIsDone} = req.query;
+    try {
+        const tasks = await Task.findAll({
+            //attributes: ['title'],
+            attributes: simplified ? {exclude: "id"} : undefined,
+            where: pIsDone ? {isDone: Boolean(pIsDone) } : undefined
+        });
+        res.status(200).json(tasks);
+    } catch (error){
+        res.status(500).json(error);
     }
-    res.json(filteredTasks)
 })
 
-router.route('/addTask').post((req, res) => {
-    let task = new Task(req.body.id, req.body.title, req.body.isDone);
-    tasks.push(task)
-
-    res.json(task)
+router.route('/addTask').post(async (req, res) => {
+    try {
+        const newTask = await Task.create(req.body) 
+        res.status(200).json(newTask)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(error);
+    }
 })
 
-router.route('/modifyTask/:id').put((req, res) => {
-    let task = tasks.find(task => task.id == req.params.id)
-
-    task.title = req.body.title;
-    task.isDone = req.body.isDone;
-
-    res.json(task)
+router.route('/modifyTask/:id').put(async (req, res) => {
+    try {
+        const task = await Task.findByPk(req.params.id);
+        if (task){
+            const updatedTask = await task.update(req.body);
+            res.status(200).json(updatedTask);
+        } else {
+            res.status(404).json({ error: `Task with id ${req.params.id} not found!`})
+        }
+    } catch (error) {
+        res.status(500).json(error)
+    }
 })
 
 router.route('/deleteTask/:id').delete((req, res) => {
-    let index = tasks.findIndex(task =>  task.id == req.params.id)
-
-    tasks.splice(index, 1);
-
-    res.json(tasks);
+    try {
+        Task.destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+        .then((rows)=> {
+            if (rows  === 1){
+                res.status(200).json({ status: "task deleted!"})
+            } else {
+                res.status(202).json({ status: "task does not exists!"})
+            }
+        })
+    } catch (error) {
+        res.status(500).json(error);
+    }
 })
 
 module.exports = router;
