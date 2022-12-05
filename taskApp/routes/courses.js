@@ -2,6 +2,9 @@ let express = require('express')
 const { Op } = require('sequelize')
 let router = express.Router()
 const Course = require("../models/course")
+const Student = require('../models/student')
+
+Course.belongsToMany(Student, { through: "Enrollments" })
 
 router.route('/getCourses').get(async (req, res) => {
     const {simplified} = req.query;

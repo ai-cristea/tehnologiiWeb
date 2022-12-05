@@ -5,7 +5,7 @@ const sequelize = new Sequelize({
     storage: "./sqlite/taskApp.db"
 })
 
-sequelize.sync({ alter: true}).then( () => {
+sequelize.sync().then( () => {
     console.log("All models were syncronized successfully!");
 })
 

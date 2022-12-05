@@ -50,14 +50,49 @@ router.route('/addTask').post(async (req, res) => {
     }
 })
 
-router.route('/students/:id/task').post(async (req, res) => {
+router.route('/students/:studentId/task').post(async (req, res) => {
     try {
-        const student = await Student.findByPk(req.params.id)
+        const student = await Student.findByPk(req.params.studentId)
         if (student){
             const newTask = new Task(req.body) 
-            newTask.studentId = student.id;
+            newTask.StudentId = student.id;
             await newTask.save();
             res.status(200).json({"message": "task created!"})
+        } else {
+            res.status(404).json({ error: `Student with id ${req.params.studentId} not found!`})
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(error);
+    }
+})
+
+router.route('/students/:studentId/task').get(async (req, res) => {
+    try {
+        const student = await Student.findByPk(req.params.studentId, {
+            include: [Task]
+        })
+        if (student){
+            res.status(200).json(student.Tasks)
+        } else {
+            res.status(404).json({ error: `Student with id ${req.params.studentId} not found!`})
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(error);
+    }
+})
+
+router.route('/students/:studentId/task/:taskId').put(async (req, res) => {
+    try {
+        const student = await Student.findByPk(req.params.studentId)
+        if (student){
+            const tasks = await student.getTasks({id : req.params.taskId})
+            let task = tasks.shift();
+            if (task){
+                task = await task.update(req.body);
+            }
+            res.status(200).json(task)
         } else {
             res.status(404).json({ error: `Student with id ${req.params.studentId} not found!`})
         }
