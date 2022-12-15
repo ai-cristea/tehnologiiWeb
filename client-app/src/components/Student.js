@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './Student.css'
 
 function Student (props) {
@@ -10,8 +11,10 @@ function Student (props) {
                 {item.name}
             </div>
             <div className="status">
-
                 {item.status}
+            </div>
+            <div className="tasks">
+                <Link to={`/students/${item.id}/tasks`}> See tasks... </Link>
             </div>
         </div>
     )

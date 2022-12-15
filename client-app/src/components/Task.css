@@ -1,7 +1,7 @@
-.student {
-    height: 300px;
+.task {
+    height: 200px;
     width: 200px;
-    background-color: lightblue;
+    background-color: lightgreen;
     margin: 10px;
     display: flex;
     align-items: center;
@@ -10,29 +10,20 @@
     padding: 10px;
   }
   
-  .student .name {
+  .task .title {
     height: 100px;
     width: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: lightskyblue;
+    background-color: grey;
   }
   
-  .student .status {
+  .task .isDone {
     height: 100px;
     width: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: lightsteelblue;
-  }
-
-  .student .tasks {
-    height: 100px;
-    width: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: lightskyblue;
+    background-color: green;
   }
